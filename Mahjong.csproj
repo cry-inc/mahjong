@@ -63,10 +63,10 @@
     <Content Include="Setups\camel.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Setups\four.txt">
+    <Content Include="Setups\eight.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Setups\impossible.txt">
+    <Content Include="Setups\four.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Setups\two.txt">
