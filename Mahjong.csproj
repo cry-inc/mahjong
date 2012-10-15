@@ -52,7 +52,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Tile.cs" />
-    <Compile Include="TileOrientation.cs" />
     <Compile Include="TilePair.cs" />
     <Compile Include="TileType.cs" />
     <Compile Include="TurtleGenerator.cs" />

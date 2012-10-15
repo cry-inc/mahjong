@@ -1,96 +1,96 @@
-4 2 0 Vertical
-6 2 0 Vertical
-8 2 0 Vertical
-10 2 0 Vertical
-12 2 0 Vertical
-14 2 0 Vertical
-16 6 0 Vertical
-22 6 0 Vertical
-24 2 0 Vertical
-26 2 0 Vertical
-28 2 0 Vertical
-30 2 0 Vertical
-32 2 0 Vertical
-34 2 0 Vertical
-14 6 0 Vertical
-12 6 0 Vertical
-10 6 0 Vertical
-8 6 0 Vertical
-6 6 0 Vertical
-4 10 0 Vertical
-6 10 0 Vertical
-8 10 0 Vertical
-10 10 0 Vertical
-12 10 0 Vertical
-14 10 0 Vertical
-16 10 0 Vertical
-18 10 0 Vertical
-20 10 0 Vertical
-22 10 0 Vertical
-24 6 0 Vertical
-26 6 0 Vertical
-28 6 0 Vertical
-30 6 0 Vertical
-32 6 0 Vertical
-24 10 0 Vertical
-26 10 0 Vertical
-28 10 0 Vertical
-30 10 0 Vertical
-32 10 0 Vertical
-34 10 0 Vertical
-6 14 0 Vertical
-8 14 0 Vertical
-10 14 0 Vertical
-12 14 0 Vertical
-14 14 0 Vertical
-16 14 0 Vertical
-22 14 0 Vertical
-24 14 0 Vertical
-26 14 0 Vertical
-28 14 0 Vertical
-30 14 0 Vertical
-32 14 0 Vertical
-34 18 0 Vertical
-32 18 0 Vertical
-30 18 0 Vertical
-28 18 0 Vertical
-26 18 0 Vertical
-24 18 0 Vertical
-14 18 0 Vertical
-12 18 0 Vertical
-10 18 0 Vertical
-8 18 0 Vertical
-6 18 0 Vertical
-4 18 0 Vertical
-8 6 1 Vertical
-8 10 1 Vertical
-8 14 1 Vertical
-10 14 1 Vertical
-10 10 1 Vertical
-10 6 1 Vertical
-12 6 1 Vertical
-12 10 1 Vertical
-12 14 1 Vertical
-10 10 2 Vertical
-26 6 1 Vertical
-28 6 1 Vertical
-30 6 1 Vertical
-30 10 1 Vertical
-28 10 1 Vertical
-26 10 1 Vertical
-26 14 1 Vertical
-28 14 1 Vertical
-30 14 1 Vertical
-12 10 2 Vertical
-8 10 2 Vertical
-26 10 2 Vertical
-28 10 2 Vertical
-30 10 2 Vertical
-29 10 3 Vertical
-27 10 3 Vertical
-11 10 3 Vertical
-9 10 3 Vertical
-10 2 1 Vertical
-28 2 1 Vertical
-28 18 1 Vertical
-10 18 1 Vertical
+4 2 0
+6 2 0
+8 2 0
+10 2 0
+12 2 0
+14 2 0
+16 6 0
+22 6 0
+24 2 0
+26 2 0
+28 2 0
+30 2 0
+32 2 0
+34 2 0
+14 6 0
+12 6 0
+10 6 0
+8 6 0
+6 6 0
+4 10 0
+6 10 0
+8 10 0
+10 10 0
+12 10 0
+14 10 0
+16 10 0
+18 10 0
+20 10 0
+22 10 0
+24 6 0
+26 6 0
+28 6 0
+30 6 0
+32 6 0
+24 10 0
+26 10 0
+28 10 0
+30 10 0
+32 10 0
+34 10 0
+6 14 0
+8 14 0
+10 14 0
+12 14 0
+14 14 0
+16 14 0
+22 14 0
+24 14 0
+26 14 0
+28 14 0
+30 14 0
+32 14 0
+34 18 0
+32 18 0
+30 18 0
+28 18 0
+26 18 0
+24 18 0
+14 18 0
+12 18 0
+10 18 0
+8 18 0
+6 18 0
+4 18 0
+8 6 1
+8 10 1
+8 14 1
+10 14 1
+10 10 1
+10 6 1
+12 6 1
+12 10 1
+12 14 1
+10 10 2
+26 6 1
+28 6 1
+30 6 1
+30 10 1
+28 10 1
+26 10 1
+26 14 1
+28 14 1
+30 14 1
+12 10 2
+8 10 2
+26 10 2
+28 10 2
+30 10 2
+29 10 3
+27 10 3
+11 10 3
+9 10 3
+10 2 1
+28 2 1
+28 18 1
+10 18 1

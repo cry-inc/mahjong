@@ -42,10 +42,8 @@ namespace Mahjong
             foreach (string line in lines)
             {
                 string[] splitted = line.Split(' ');
-                if (splitted.Length != 4) continue;
-                Tile tile = new Tile(int.Parse(splitted[0]), int.Parse(splitted[1]), int.Parse(splitted[2]),
-                    type, splitted[3] == "Horizontal" ? TileOrientation.Horizontal : TileOrientation.Vertical);
-
+                if (splitted.Length != 3) continue;
+                Tile tile = new Tile(int.Parse(splitted[0]), int.Parse(splitted[1]), int.Parse(splitted[2]), type);
                 field.Tiles.Add(tile);
             }
 

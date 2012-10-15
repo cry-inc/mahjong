@@ -1,2 +1,2 @@
-14 10 0 Vertical
-16 10 0 Vertical
+14 10 0
+16 10 0

@@ -54,12 +54,8 @@ namespace Mahjong
 
         private RectangleF TileRectangle(float cellWidth, float cellHeight, Tile t)
         {
-            if (t.Orientation == TileOrientation.Horizontal)
-                return new RectangleF(t.X * cellWidth, t.Y * cellHeight,
-                    Tile.WIDTH * cellWidth, Tile.HEIGHT * cellHeight);
-            else
-                return new RectangleF(t.X * cellWidth, t.Y * cellHeight,
-                    Tile.HEIGHT * cellWidth, Tile.WIDTH * cellHeight);
+            return new RectangleF(t.X * cellWidth, t.Y * cellHeight,
+                Tile.WIDTH * cellWidth, Tile.HEIGHT * cellHeight);
         }
 
         private void DrawGrid(Graphics g, float cellWidth, float cellHeight)
@@ -179,13 +175,8 @@ namespace Mahjong
             }
             else
             {
-                TileOrientation orientation = TileOrientation.Vertical;
-                if (e.Button == MouseButtons.Right)
-                    orientation = TileOrientation.Horizontal;
-
-                int zp = _field.FindNewTileZ(xp, yp, orientation);
-                Tile tile = new Tile(xp, yp, zp, _field.TileTypes[0], orientation);
-
+                int zp = _field.FindNewTileZ(xp, yp);
+                Tile tile = new Tile(xp, yp, zp, _field.TileTypes[0]);
                 _field.Tiles.Add(tile);
             }
         }

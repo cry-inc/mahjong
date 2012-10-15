@@ -64,26 +64,22 @@ namespace Mahjong
             return z;
         }
 
-        public Point[] GetTestPoints(int x, int y, TileOrientation orientation)
+        public Point[] GetTestPoints(int x, int y)
         {
-            int w = Tile.WIDTH, h = Tile.HEIGHT;
-            if (orientation == TileOrientation.Vertical)
-            { w = Tile.HEIGHT; h = Tile.WIDTH; }
-
             Point[] points = new Point[WIDTH * HEIGHT];
             int p = 0;
 
-            for (int xp = 0; xp < w; xp++)
-                for (int yp = 0; yp < h; yp++)
+            for (int xp = 0; xp < Tile.WIDTH; xp++)
+                for (int yp = 0; yp < Tile.HEIGHT; yp++)
                     points[p++] = new Point(x + xp, y + yp);
 
             return points;
         }
 
-        public int FindNewTileZ(int x, int y, TileOrientation orientation)
+        public int FindNewTileZ(int x, int y)
         {
             int maxZ = -1;
-            Point[] points = GetTestPoints(x, y, orientation);
+            Point[] points = GetTestPoints(x, y);
             foreach (Point p in points)
             {
                 int z = GetZFromCoord(p.X, p.Y);
@@ -95,7 +91,7 @@ namespace Mahjong
 
         private bool CanMove(Tile tile, int xd, int yd, int zd)
         {
-            Point[] points = GetTestPoints(tile.X, tile.Y, tile.Orientation);
+            Point[] points = GetTestPoints(tile.X, tile.Y);
             
             int z = tile.Z + zd;
             for (int i = 0; i < points.Length; i++)

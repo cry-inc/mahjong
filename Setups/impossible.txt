@@ -1,8 +1,8 @@
-14 10 0 Vertical
-16 10 0 Vertical
-18 10 0 Vertical
-20 10 0 Vertical
-19 10 1 Vertical
-15 10 1 Vertical
-17 10 1 Vertical
-16 11 2 Horizontal
+14 10 0
+16 10 0
+18 10 0
+20 10 0
+19 10 1
+15 10 1
+17 10 1
+16 11 2
