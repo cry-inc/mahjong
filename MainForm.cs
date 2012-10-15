@@ -10,11 +10,31 @@ namespace Mahjong
         public MainForm()
         {
             InitializeComponent();
+
+            string[] setups = ListSetups();
+            foreach (string setup in setups)
+            {
+                ToolStripItem tsi = gameToolStripMenuItem.DropDownItems.Add(setup);
+                tsi.Click += new EventHandler(tsi_Click);
+            }
         }
 
-        private void gameToolStripMenuItem_Click(object sender, EventArgs e)
+        void tsi_Click(object sender, EventArgs e)
         {
-            panelView.Field = new Field(new TurtleGenerator());
+            ToolStripItem s = (ToolStripItem)sender;
+            string setup = "Setups/" + s.Text + ".txt";
+            panelView.Field = new Field(new ReverseGenerator(setup));
+        }
+
+        public string[] ListSetups()
+        {
+            string[] setups = Directory.GetFiles("Setups/");
+            for (int i = 0; i < setups.Length; i++)
+            {
+                setups[i] = setups[i].Replace(".txt", "");
+                setups[i] = setups[i].Replace("Setups/", "");
+            }
+            return setups;
         }
 
         private void saveTileFieldToolStripMenuItem_Click(object sender, EventArgs e)
@@ -40,8 +60,11 @@ namespace Mahjong
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            panelView.Field.Tiles.Clear();
-            panelView.Invalidate();
+            if (panelView.Field != null)
+            {
+                panelView.Field.Tiles.Clear();
+                panelView.Invalidate();
+            }
         }
     }
 }

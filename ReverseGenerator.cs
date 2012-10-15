@@ -4,14 +4,21 @@ using System.Collections.Generic;
 
 namespace Mahjong
 {
-    class TurtleGenerator : IGenerator
+    class ReverseGenerator : IGenerator
     {
+        private string _setupFile;
+
+        public ReverseGenerator(string file)
+        {
+            _setupFile = file;
+        }
+
         public void Generate(Field field, TileType[] types)
         {
             field.Tiles = new List<Tile>();
             
             // Place the full set with bogus type ids
-            LoadStructure(field, types[0], "Setups/camel.txt");
+            LoadStructure(field, types[0], _setupFile);
 
             List<TilePair> reversed = new List<TilePair>();
             List<Tile> removables = new List<Tile>();
