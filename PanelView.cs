@@ -126,9 +126,14 @@ namespace Mahjong
 
             DrawGrid(e.Graphics, cellWidth, cellHeight);
 
-            _field.Tiles.Sort(CompareTilesByZ);
+            // Copy tiles into list and sort
+            List<Tile> tiles = new List<Tile>();
+            foreach (KeyValuePair<int, Tile> pair in _field.Tiles)
+                tiles.Add(pair.Value);
+            tiles.Sort(CompareTilesByZ);
 
-            foreach (Tile t in _field.Tiles)
+            // Draw sorted tile list from bottom left to top right
+            foreach (Tile t in tiles)
                 DrawTile(e.Graphics, cellWidth, cellHeight, t);
         }
 
@@ -150,8 +155,8 @@ namespace Mahjong
             {
                 if (_selected.Type.Id == clicked.Type.Id && _field.CanMove(_selected) && _field.CanMove(clicked))
                 {
-                    _field.Tiles.Remove(clicked);
-                    _field.Tiles.Remove(_selected);
+                    _field.Remove(clicked);
+                    _field.Remove(_selected);
 
                     // TODO: Check for no solution
                 }
@@ -171,13 +176,13 @@ namespace Mahjong
             {
                 Tile tile = _field.GetTileFromCoord(xp, yp);
                 if (tile != null)
-                    _field.Tiles.Remove(tile);
+                    _field.Remove(tile);
             }
             else
             {
                 int zp = _field.FindNewTileZ(xp, yp);
                 Tile tile = new Tile(xp, yp, zp, _field.TileTypes[0]);
-                _field.Tiles.Add(tile);
+                _field.Add(tile);
             }
         }
 

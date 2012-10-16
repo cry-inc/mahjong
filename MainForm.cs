@@ -47,8 +47,8 @@ namespace Mahjong
             if (panelView.Field.Tiles.Count % 2 != 0)
                 MessageBox.Show("Number of tiles modulo two is not zero!");
 
-            foreach (Tile tile in panelView.Field.Tiles)
-                text += tile.X + " " + tile.Y + " " + tile.Z + "\n";
+            foreach (KeyValuePair<int, Tile> pair in panelView.Field.Tiles)
+                text += pair.Value.X + " " + pair.Value.Y + " " + pair.Value.Z + "\n";
 
             File.WriteAllText("dump.txt", text);
         }

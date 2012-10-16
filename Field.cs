@@ -9,10 +9,10 @@ namespace Mahjong
         public const int WIDTH = 40;
         public const int HEIGHT = 36;
 
-        private List<Tile> _tiles;
-        TileType[] _types;
+        private Dictionary<int, Tile> _tiles;
+        private TileType[] _types;
 
-        public List<Tile> Tiles
+        public Dictionary<int, Tile> Tiles
         {
             get { return _tiles; }
             set { _tiles = value; }
@@ -23,17 +23,53 @@ namespace Mahjong
 
         public Field(IGenerator generator)
         {
+            // TODO: Move type loading into generator!
             _types = TileType.LoadTileTypes("Tiles/tiles.txt");
             generator.Generate(this, _types);
+        }
+
+        private int CalcTileIndex(int x, int y, int z)
+        {
+            return z * WIDTH * HEIGHT + y * WIDTH + x;
+        }
+
+        public void Add(Tile tile)
+        {
+            int index = CalcTileIndex(tile.X, tile.Y, tile.Z);
+            _tiles.Add(index, tile);
+        }
+
+        public void Remove(Tile tile)
+        {
+            int index = CalcTileIndex(tile.X, tile.Y, tile.Z);
+            if (tile != _tiles[index])
+                throw new Exception("Uh-oh, tile reference mismatch!");
+            _tiles.Remove(index);
+        }
+
+        public int[] GetPossibleTileIndices(float x, float y, float z)
+        {
+            int ix = (int)Math.Floor(x);
+            int iy = (int)Math.Floor(y);
+            int iz = (int)Math.Floor(z);
+
+            int[] indicies = new int[8];
+            int c = 0;
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 4; j++)
+                    indicies[c++] = CalcTileIndex(ix - i, iy - j, iz);
+
+            return indicies;
         }
 
         public Tile FindTile(float x, float y, float z)
         {
             Tile tile = null;
 
-            foreach (Tile t in _tiles)
-                if (t.IsInside(x, y, z))
-                    tile = t;
+            int[] indices = GetPossibleTileIndices(x, y, z);
+            foreach (int i in indices)
+                if (_tiles.ContainsKey(i) && _tiles[i].IsInside(x, y, z))
+                    tile = _tiles[i];
 
             return tile;
         }
@@ -42,9 +78,10 @@ namespace Mahjong
         {
             Tile topmostTile = null;
 
-            for (int i = 0; i < _tiles.Count; i++)
+            // TODO: implement without iterating over all tiles!
+            foreach (KeyValuePair<int, Tile> pair in _tiles)
             {
-                Tile tile = _tiles[i];
+                Tile tile = pair.Value;
                 if (tile.IsInside(x, y))
                     if (topmostTile == null || topmostTile.Z < tile.Z)
                         topmostTile = tile;
