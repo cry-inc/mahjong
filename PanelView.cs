@@ -24,6 +24,7 @@ namespace Mahjong
         private Dictionary<int, Image> _images = new Dictionary<int, Image>();
         private Image _selImage = new Bitmap(Image.FromFile("Tiles/selected.png"));
         private Image _tileImage = new Bitmap(Image.FromFile("Tiles/tile.png"));
+        private bool _drawGrid = false;
 
         public Field Field
         {
@@ -43,6 +44,12 @@ namespace Mahjong
             set { _selected = value; Invalidate(); }
         }
 
+        public bool DrawGrid
+        {
+            get { return _drawGrid; }
+            set { _drawGrid = value; Invalidate(); }
+        }
+
         public PanelView()
         {
             DoubleBuffered = true;
@@ -55,7 +62,7 @@ namespace Mahjong
                 Tile.WIDTH * CELLWIDTH, Tile.HEIGHT * CELLHEIGHT);
         }
 
-        private void DrawGrid(Graphics g)
+        private void DrawTileGrid(Graphics g)
         {
             for (int x = 1; x <= Field.WIDTH-1; x++)
             {
@@ -112,7 +119,8 @@ namespace Mahjong
             if (_field == null)
                 return;
 
-            DrawGrid(e.Graphics);
+            if (_drawGrid)
+                DrawTileGrid(e.Graphics);
 
             // Copy tiles into list and sort
             List<Tile> tiles = new List<Tile>();
@@ -154,7 +162,7 @@ namespace Mahjong
             int xp = (int)(e.X / CELLWIDTH);
             int yp = (int)(e.Y / CELLHEIGHT);
 
-            if (e.Button == MouseButtons.Middle)
+            if (e.Button == MouseButtons.Right)
             {
                 Tile tile = _field.GetTileFromCoord(xp, yp);
                 if (tile != null)

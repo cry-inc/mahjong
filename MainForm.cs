@@ -17,6 +17,9 @@ namespace Mahjong
                 ToolStripItem tsi = gameToolStripMenuItem.DropDownItems.Add(setup);
                 tsi.Click += new EventHandler(tsi_Click);
             }
+
+            gridComboBox.SelectedIndex = 0;
+            modeComboBox.SelectedIndex = 0;
         }
 
         void tsi_Click(object sender, EventArgs e)
@@ -65,6 +68,16 @@ namespace Mahjong
                 panelView.Field.Tiles.Clear();
                 panelView.Invalidate();
             }
+        }
+
+        private void gridComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            panelView.DrawGrid = gridComboBox.SelectedIndex % 2 == 0;
+        }
+
+        private void modeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            panelView.Mode = (modeComboBox.SelectedIndex == 1) ? PanelMode.Edit : PanelMode.Play;
         }
     }
 }
