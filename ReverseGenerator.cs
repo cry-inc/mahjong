@@ -15,8 +15,6 @@ namespace Mahjong
 
         public void Generate(Field field, TileType[] types)
         {
-            //TODO: find bug with four tiles!
-
             field.Tiles = new Dictionary<int, Tile>();
             
             // Place the full set with a default tile type
@@ -70,13 +68,11 @@ namespace Mahjong
             field.Tiles.Keys.CopyTo(keys, 0);
 
             foreach (int key in keys)
-            {
                 if (field.CanMove(field.Tiles[key]))
-                {
                     removables.Add(field.Tiles[key]);
-                    field.Remove(field.Tiles[key]);
-                }
-            }
+
+            foreach (Tile tile in removables)
+                field.Remove(tile);
 
             return removables;
         }
