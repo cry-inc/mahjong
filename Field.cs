@@ -4,6 +4,15 @@ using System.Collections.Generic;
 
 namespace Mahjong
 {
+    enum PlayResult
+    {
+        DifferentTypes = 1,
+        CanNotMoveTile = 2,
+        ValidMove = 4,
+        NoFurtherMoves = 8,
+        Won = 16,
+    }
+
     class Field
     {
         public const int WIDTH = 40;
@@ -11,6 +20,9 @@ namespace Mahjong
 
         private Dictionary<int, Tile> _tiles;
         private TileType[] _types;
+        private bool _started = false;
+        private DateTime _startTime;
+        private TimeSpan _gameTime;
 
         public Dictionary<int, Tile> Tiles
         {
@@ -20,6 +32,11 @@ namespace Mahjong
 
         public TileType[] TileTypes
         { get { return _types; } }
+
+        public TimeSpan GameTime
+        {
+            get { return _gameTime; }
+        }
 
         public Field(IGenerator generator)
         {
@@ -45,6 +62,52 @@ namespace Mahjong
             if (tile != _tiles[index])
                 throw new Exception("Uh-oh, tile reference mismatch!");
             _tiles.Remove(index);
+        }
+
+        public PlayResult Play(Tile tile1, Tile tile2)
+        {
+            if (!_started)
+            {
+                _startTime = DateTime.Now;
+                _started = true;
+            }
+
+            if (tile1.Type != tile2.Type)
+                return PlayResult.DifferentTypes;
+
+            if (!CanMove(tile1) || !CanMove(tile2))
+                return PlayResult.CanNotMoveTile;
+
+            Remove(tile1);
+            Remove(tile2);
+
+            if (_tiles.Count == 0)
+            {
+                _gameTime = DateTime.Now - _startTime;
+                return PlayResult.Won;
+            }
+
+            PlayResult result = PlayResult.ValidMove;
+            if (!NextMovePossible())
+                result |= PlayResult.NoFurtherMoves;
+            return result;
+        }
+
+        public bool NextMovePossible()
+        {
+            // Get all removable tiles
+            List<Tile> removables = new List<Tile>();
+            foreach (KeyValuePair<int, Tile> pair in _tiles)
+                if (CanMove(pair.Value))
+                    removables.Add(pair.Value);
+
+            // Check if there are two with the same id in this list
+            for (int i=0; i<removables.Count; i++)
+                for (int j=0; j<removables.Count; j++)
+                    if (j != i && removables[i].Type == removables[j].Type)
+                        return true;
+
+            return false;
         }
 
         public int[] GetPossibleTileIndices(float x, float y, float z)

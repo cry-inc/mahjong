@@ -67,12 +67,12 @@ namespace Mahjong
             for (int x = 1; x <= Field.WIDTH-1; x++)
             {
                 float px = x * CELLWIDTH;
-                g.DrawLine(Pens.Black, px, 0, px, Height);
+                g.DrawLine(Pens.Black, px, 0, px, Field.HEIGHT * CELLHEIGHT);
             }
             for (int y = 1; y <= Field.HEIGHT-1; y++)
             {
                 float py = y * CELLHEIGHT;
-                g.DrawLine(Pens.Black, 0, py, Width, py);
+                g.DrawLine(Pens.Black, 0, py, Field.WIDTH * CELLWIDTH, py);
             }
         }
 
@@ -142,16 +142,21 @@ namespace Mahjong
             if (clicked == null)
                 return;
 
+            if (!_field.CanMove(clicked))
+                return;
+
             if (_selected == null || clicked == _selected)
                 _selected = clicked;
             else
             {
-                if (_selected.Type.Id == clicked.Type.Id && _field.CanMove(_selected) && _field.CanMove(clicked))
+                PlayResult result = _field.Play(_selected, clicked);
+                if (result == PlayResult.Won)
                 {
-                    _field.Remove(clicked);
-                    _field.Remove(_selected);
-
-                    // TODO: Check for no solution
+                    MessageBox.Show("You won the game in " + _field.GameTime.TotalSeconds + " seconds !");
+                }
+                else if ((result & PlayResult.NoFurtherMoves) != 0)
+                {
+                    MessageBox.Show("No further moves possible :(");
                 }
                 _selected = null;
             }
