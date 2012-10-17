@@ -4,6 +4,6 @@ namespace Mahjong
 {
     interface IGenerator
     {
-        void Generate(Field field, TileType[] types);
+        void Generate(Field field);
     }
 }

@@ -26,7 +26,7 @@ namespace Mahjong
         {
             ToolStripItem s = (ToolStripItem)sender;
             string setup = "Setups/" + s.Text + ".txt";
-            panelView.Field = new Field(new ReverseGenerator(setup));
+            panelView.Field = new Field(new ReverseGenerator(setup, "Tiles/tiles.txt"));
         }
 
         public string[] ListSetups()
@@ -63,11 +63,7 @@ namespace Mahjong
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (panelView.Field != null)
-            {
-                panelView.Field.Tiles.Clear();
-                panelView.Invalidate();
-            }
+            panelView.Field = new Field(new EmptyGenerator());
         }
 
         private void gridComboBox_SelectedIndexChanged(object sender, EventArgs e)

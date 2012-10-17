@@ -39,6 +39,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmptyGenerator.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="IGenerator.cs" />
     <Compile Include="MainForm.cs">

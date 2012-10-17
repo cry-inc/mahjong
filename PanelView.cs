@@ -54,6 +54,9 @@ namespace Mahjong
         {
             DoubleBuffered = true;
             ResizeRedraw = true;
+            
+            // Add image for tiles without type
+            _images.Add(-1, new Bitmap(_tileImage));
         }
 
         private RectangleF TileRectangle(Tile t)
@@ -78,18 +81,19 @@ namespace Mahjong
 
         private void DrawTile(Graphics g, Tile tile)
         {
-            if (!_images.ContainsKey(tile.Type.Id))
+            int id = tile.Type != null ? tile.Type.Id : -1;
+            if (!_images.ContainsKey(id))
             {
                 Bitmap copy;
                 using (Image img = Image.FromFile("Tiles/" + tile.Type.Name + ".png"))
                 {
                     copy = new Bitmap(_tileImage);
                     Graphics.FromImage(copy).DrawImage(img, new Rectangle(0, 0, DRAWWIDTH, DRAWHEIGHT));
-                    _images.Add(tile.Type.Id, copy);
+                    _images.Add(id, copy);
                 }
             }
 
-            Image texture = _images[tile.Type.Id];
+            Image texture = _images[id];
             RectangleF rect = TileRectangle(tile);
             rect.X -= 5;
             rect.Y -= 5 + 5 * tile.Z;
@@ -176,7 +180,7 @@ namespace Mahjong
             else
             {
                 int zp = _field.FindNewTileZ(xp, yp);
-                Tile tile = new Tile(xp, yp, zp, _field.TileTypes[0]);
+                Tile tile = new Tile(xp, yp, zp, null);
                 _field.Add(tile);
             }
         }

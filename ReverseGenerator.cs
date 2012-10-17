@@ -6,19 +6,23 @@ namespace Mahjong
 {
     class ReverseGenerator : IGenerator
     {
-        private string _setupFile;
+        private string _structureFile;
+        private string _typeFile;
 
-        public ReverseGenerator(string file)
+        public ReverseGenerator(string structureFile, string typeFile)
         {
-            _setupFile = file;
+            _structureFile = structureFile;
+            _typeFile = typeFile;
         }
 
-        public void Generate(Field field, TileType[] types)
+        public void Generate(Field field)
         {
+            TileType[] types = TileType.LoadTileTypes(_typeFile);
+
             field.Tiles = new Dictionary<int, Tile>();
             
             // Place the full set with a default tile type
-            LoadStructure(field, types[0], _setupFile);
+            LoadStructure(field, types[0], _structureFile);
 
             List<TilePair> reversed = new List<TilePair>();
             while (field.Tiles.Count > 0)

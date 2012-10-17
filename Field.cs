@@ -19,7 +19,6 @@ namespace Mahjong
         public const int HEIGHT = 36;
 
         private Dictionary<int, Tile> _tiles;
-        private TileType[] _types;
         private bool _started = false;
         private DateTime _startTime;
         private TimeSpan _gameTime;
@@ -30,9 +29,6 @@ namespace Mahjong
             set { _tiles = value; }
         }
 
-        public TileType[] TileTypes
-        { get { return _types; } }
-
         public TimeSpan GameTime
         {
             get { return _gameTime; }
@@ -40,9 +36,7 @@ namespace Mahjong
 
         public Field(IGenerator generator)
         {
-            // TODO: Move type loading into generator!
-            _types = TileType.LoadTileTypes("Tiles/tiles.txt");
-            generator.Generate(this, _types);
+            generator.Generate(this);
         }
 
         private int CalcTileIndex(int x, int y, int z)
@@ -141,7 +135,7 @@ namespace Mahjong
         {
             Tile topmostTile = null;
 
-            // TODO: implement without iterating over all tiles!
+            // TODO: implement without iterating over all tiles?
             foreach (KeyValuePair<int, Tile> pair in _tiles)
             {
                 Tile tile = pair.Value;
