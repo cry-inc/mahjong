@@ -21,15 +21,19 @@ namespace Mahjong
             LoadStructure(field, types[0], _setupFile);
 
             List<TilePair> reversed = new List<TilePair>();
-            List<Tile> removables = new List<Tile>();
             while (field.Tiles.Count > 0)
             {
-                // Find two random outer tiles, remove them and store the coords
+                // Find two or more random outer tiles, remove them and store the coords
+                List<Tile> removables = new List<Tile>();
                 removables.AddRange(ExtractRemovableTiles(field));
 
-                // Continue until no more removable tile pairs are left
+                // Continue until no more removable tile pairs are left in the list
                 while (removables.Count > 1)
                     reversed.Add(TilePair.FetchPair(removables));
+
+                // Add remaing tile to the field
+                foreach (Tile tile in removables)
+                    field.Add(tile);
             }
 
             // Read the list from behind and and get random a random tile type for each pair to build the game
