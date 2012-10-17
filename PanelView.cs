@@ -15,12 +15,15 @@ namespace Mahjong
     {
         public const int DRAWWIDTH = 75;
         public const int DRAWHEIGHT = 95;
+        public const int CELLWIDTH = 30;
+        public const int CELLHEIGHT = 20;
 
         private Field _field;
         private PanelMode _mode = PanelMode.Play;
         private Tile _selected;
         private Dictionary<int, Image> _images = new Dictionary<int, Image>();
-        private Image _selImage = Image.FromFile("Tiles/selected.png");
+        private Image _selImage = new Bitmap(Image.FromFile("Tiles/selected.png"));
+        private Image _tileImage = new Bitmap(Image.FromFile("Tiles/tile.png"));
 
         public Field Field
         {
@@ -46,61 +49,49 @@ namespace Mahjong
             ResizeRedraw = true;
         }
 
-        public float GetCellWidth()
-        { return 30; /* (float)Width / Field.WIDTH; */ }
-
-        public float GetCellHeight()
-        { return 20; /* (float)Height / Field.HEIGHT; */ }
-
-        private RectangleF TileRectangle(float cellWidth, float cellHeight, Tile t)
+        private RectangleF TileRectangle(Tile t)
         {
-            return new RectangleF(t.X * cellWidth, t.Y * cellHeight,
-                Tile.WIDTH * cellWidth, Tile.HEIGHT * cellHeight);
+            return new RectangleF(t.X * CELLWIDTH, t.Y * CELLHEIGHT,
+                Tile.WIDTH * CELLWIDTH, Tile.HEIGHT * CELLHEIGHT);
         }
 
-        private void DrawGrid(Graphics g, float cellWidth, float cellHeight)
+        private void DrawGrid(Graphics g)
         {
             for (int x = 1; x <= Field.WIDTH-1; x++)
             {
-                float px = x * cellWidth;
+                float px = x * CELLWIDTH;
                 g.DrawLine(Pens.Black, px, 0, px, Height);
             }
             for (int y = 1; y <= Field.HEIGHT-1; y++)
             {
-                float py = y * cellHeight;
+                float py = y * CELLHEIGHT;
                 g.DrawLine(Pens.Black, 0, py, Width, py);
             }
         }
 
-        private void DrawTile(Graphics g, float cellWidth, float cellHeight, Tile tile)
+        private void DrawTile(Graphics g, Tile tile)
         {
             if (!_images.ContainsKey(tile.Type.Id))
             {
                 Bitmap copy;
                 using (Image img = Image.FromFile("Tiles/" + tile.Type.Name + ".png"))
                 {
-                    copy = new Bitmap(DRAWWIDTH, DRAWHEIGHT);
+                    copy = new Bitmap(_tileImage);
                     Graphics.FromImage(copy).DrawImage(img, new Rectangle(0, 0, DRAWWIDTH, DRAWHEIGHT));
                     _images.Add(tile.Type.Id, copy);
                 }
             }
+
             Image texture = _images[tile.Type.Id];
-            
-            RectangleF rect = TileRectangle(cellWidth, cellHeight, tile);
-            RectangleF drawRect = rect;
-            drawRect.X -= 5;
-            drawRect.Y -= 5 + 5 * tile.Z;
-            drawRect.Width = DRAWWIDTH;
-            drawRect.Height = DRAWHEIGHT;
-            
-            g.DrawImage(texture, drawRect);
+            RectangleF rect = TileRectangle(tile);
+            rect.X -= 5;
+            rect.Y -= 5 + 5 * tile.Z;
+            rect.Width = DRAWWIDTH;
+            rect.Height = DRAWHEIGHT;
+            g.DrawImage(texture, rect);
 
             if (tile == _selected)
-            {
-                g.DrawImage(_selImage, drawRect);
-                //Color highlighted = Color.FromArgb(125, 255, 0, 255);
-                //g.FillRectangle(new SolidBrush(highlighted), drawRect);
-            }
+                g.DrawImage(_selImage, rect);
         }
 
         private static int CompareTilesByZ(Tile tile1, Tile tile2)
@@ -121,10 +112,7 @@ namespace Mahjong
             if (_field == null)
                 return;
 
-            float cellWidth = GetCellWidth();
-            float cellHeight = GetCellHeight();
-
-            DrawGrid(e.Graphics, cellWidth, cellHeight);
+            DrawGrid(e.Graphics);
 
             // Copy tiles into list and sort
             List<Tile> tiles = new List<Tile>();
@@ -134,16 +122,13 @@ namespace Mahjong
 
             // Draw sorted tile list from bottom left to top right
             foreach (Tile t in tiles)
-                DrawTile(e.Graphics, cellWidth, cellHeight, t);
+                DrawTile(e.Graphics, t);
         }
 
         private void ClickPlay(MouseEventArgs e)
         {
-            float cellWidth = GetCellWidth();
-            float cellHeight = GetCellHeight();
-
-            int xp = (int)(e.X / cellWidth);
-            int yp = (int)(e.Y / cellHeight);
+            int xp = (int)(e.X / CELLWIDTH);
+            int yp = (int)(e.Y / CELLHEIGHT);
 
             Tile clicked = _field.GetTileFromCoord(xp, yp);
             if (clicked == null)
@@ -166,11 +151,8 @@ namespace Mahjong
 
         private void ClickEdit(MouseEventArgs e)
         {
-            float cellWidth = GetCellWidth();
-            float cellHeight = GetCellHeight();
-
-            int xp = (int)(e.X / cellWidth);
-            int yp = (int)(e.Y / cellHeight);
+            int xp = (int)(e.X / CELLWIDTH);
+            int yp = (int)(e.Y / CELLHEIGHT);
 
             if (e.Button == MouseButtons.Middle)
             {

@@ -11,7 +11,6 @@ namespace Mahjong
 
         private int _id;
         private string _name;
-        private Color _color;
 
         public int Id
         { get { return _id; } }
@@ -19,14 +18,10 @@ namespace Mahjong
         public string Name
         { get { return _name; } }
 
-        public Color Color
-        { get { return _color; } }
-
-        private TileType(int id, string name, Color color)
+        private TileType(int id, string name)
         {
             _id = id;
             _name = name;
-            _color = color;
         }
 
         public static TileType[] LoadTileTypes(string path)
@@ -37,11 +32,10 @@ namespace Mahjong
             foreach (string line in lines)
             {
                 string[] splitted = line.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                if (splitted.Length < 1)
+                    continue;
                 string name = splitted[0];
-                byte r = byte.Parse(splitted[1]);
-                byte g = byte.Parse(splitted[2]);
-                byte b = byte.Parse(splitted[3]);
-                tiles.Add(new TileType(id++, name, Color.FromArgb(r, g, b)));
+                tiles.Add(new TileType(id++, name));
             }
             
             return tiles.ToArray();
