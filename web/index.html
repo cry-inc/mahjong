@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Mahjong</title>
+        <script src="jquery.js"></script>
+        <script type="text/javascript">
+
+            function redraw() {
+                $.getJSON('/mahjong.json', drawJsonData);
+            }
+            
+            function drawJsonData(json) {
+            
+                var canvas = document.getElementById('field');
+                canvas = canvas.getContext('2d');
+                //canvas.fillStyle = "rgb(200,0,0)";
+                //canvas.fillRect(10, 10, 55, 55);
+            
+                //console.log(json['field']['fieldwidth'] * 30);
+                //console.log(json['field']['fieldheight'] * 20);
+                //canvas.width = json['field']['fieldwidth'] * 30;
+                //canvas.height = json['field']['fieldheight'] * 20;
+
+                $.each(json['field']['tiles'], function(i, item) {
+                    var x = item.x * 30 - 5;
+                    var y = item.y * 20 - 5 - 5 * item.z;
+                    drawImage(canvas, "tile", x, y);
+                    drawImage(canvas, item.type, x, y);
+                });
+
+                //drawImage(canvas, "tile", 15, 15);
+            }
+            
+            function drawImage(canvas, imgName, x, y) {
+                var imageObj = new Image();
+                imageObj.onload = function() { canvas.drawImage(imageObj, x, y); };
+                imageObj.src = "image/" + imgName + ".png";
+            }
+        
+        </script>
+    </head>
+    <body onload="redraw();">
+        <canvas style="border: 1px solid black" id="field" width="1200" height="720"></canvas>
+    </body>
+</html>

@@ -30,12 +30,13 @@
         {
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.modeComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.saveTileFieldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gridComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.modeComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.panelView = new Mahjong.PanelView();
+            this.startHTTPViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,6 +44,7 @@
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gameToolStripMenuItem,
+            this.startHTTPViewToolStripMenuItem,
             this.gridComboBox,
             this.modeComboBox,
             this.saveTileFieldToolStripMenuItem,
@@ -60,6 +62,26 @@
             this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
             this.gameToolStripMenuItem.Size = new System.Drawing.Size(97, 21);
             this.gameToolStripMenuItem.Text = "Start New Game";
+            // 
+            // gridComboBox
+            // 
+            this.gridComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.gridComboBox.Items.AddRange(new object[] {
+            "Show Grid",
+            "Do Not Show Grid"});
+            this.gridComboBox.Name = "gridComboBox";
+            this.gridComboBox.Size = new System.Drawing.Size(121, 21);
+            this.gridComboBox.SelectedIndexChanged += new System.EventHandler(this.gridComboBox_SelectedIndexChanged);
+            // 
+            // modeComboBox
+            // 
+            this.modeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.modeComboBox.Items.AddRange(new object[] {
+            "Play",
+            "Edit"});
+            this.modeComboBox.Name = "modeComboBox";
+            this.modeComboBox.Size = new System.Drawing.Size(121, 21);
+            this.modeComboBox.SelectedIndexChanged += new System.EventHandler(this.modeComboBox_SelectedIndexChanged);
             // 
             // saveTileFieldToolStripMenuItem
             // 
@@ -82,26 +104,6 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // gridComboBox
-            // 
-            this.gridComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.gridComboBox.Items.AddRange(new object[] {
-            "Show Grid",
-            "Do Not Show Grid"});
-            this.gridComboBox.Name = "gridComboBox";
-            this.gridComboBox.Size = new System.Drawing.Size(121, 21);
-            this.gridComboBox.SelectedIndexChanged += new System.EventHandler(this.gridComboBox_SelectedIndexChanged);
-            // 
-            // modeComboBox
-            // 
-            this.modeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.modeComboBox.Items.AddRange(new object[] {
-            "Play",
-            "Edit"});
-            this.modeComboBox.Name = "modeComboBox";
-            this.modeComboBox.Size = new System.Drawing.Size(121, 21);
-            this.modeComboBox.SelectedIndexChanged += new System.EventHandler(this.modeComboBox_SelectedIndexChanged);
-            // 
             // panelView
             // 
             this.panelView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -113,6 +115,13 @@
             this.panelView.Selected = null;
             this.panelView.Size = new System.Drawing.Size(1167, 495);
             this.panelView.TabIndex = 1;
+            // 
+            // startHTTPViewToolStripMenuItem
+            // 
+            this.startHTTPViewToolStripMenuItem.Name = "startHTTPViewToolStripMenuItem";
+            this.startHTTPViewToolStripMenuItem.Size = new System.Drawing.Size(96, 21);
+            this.startHTTPViewToolStripMenuItem.Text = "Start HTTP View";
+            this.startHTTPViewToolStripMenuItem.Click += new System.EventHandler(this.startHTTPViewToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -141,6 +150,7 @@
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.ToolStripComboBox gridComboBox;
         private System.Windows.Forms.ToolStripComboBox modeComboBox;
+        private System.Windows.Forms.ToolStripMenuItem startHTTPViewToolStripMenuItem;
     }
 }
 

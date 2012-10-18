@@ -58,6 +58,28 @@ namespace Mahjong
             _tiles.Remove(index);
         }
 
+        private static int CompareTilesByZ(Tile tile1, Tile tile2)
+        {
+            if (tile1.Z == tile2.Z)
+            {
+                if (tile1.X == tile2.X)
+                {
+                    return tile1.Y - tile2.Y;
+                }
+                else return tile1.X - tile2.X;
+            }
+            else return tile1.Z - tile2.Z;
+        }
+
+        public Tile[] GetSortedTiles()
+        {
+            List<Tile> tiles = new List<Tile>();
+            foreach (KeyValuePair<int, Tile> pair in _tiles)
+                tiles.Add(pair.Value);
+            tiles.Sort(CompareTilesByZ);
+            return tiles.ToArray();
+        }
+
         public PlayResult Play(Tile tile1, Tile tile2)
         {
             if (!_started)

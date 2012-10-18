@@ -105,19 +105,6 @@ namespace Mahjong
                 g.DrawImage(_selImage, rect);
         }
 
-        private static int CompareTilesByZ(Tile tile1, Tile tile2)
-        {
-            if (tile1.Z == tile2.Z)
-            {
-                if (tile1.X == tile2.X)
-                {
-                    return tile1.Y - tile2.Y;
-                }
-                else return tile1.X - tile2.X;
-            }
-            else return tile1.Z - tile2.Z;
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             if (_field == null)
@@ -126,11 +113,7 @@ namespace Mahjong
             if (_drawGrid)
                 DrawTileGrid(e.Graphics);
 
-            // Copy tiles into list and sort
-            List<Tile> tiles = new List<Tile>();
-            foreach (KeyValuePair<int, Tile> pair in _field.Tiles)
-                tiles.Add(pair.Value);
-            tiles.Sort(CompareTilesByZ);
+            Tile[] tiles = _field.GetSortedTiles();
 
             // Draw sorted tile list from bottom left to top right
             foreach (Tile t in tiles)

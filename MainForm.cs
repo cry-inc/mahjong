@@ -75,5 +75,10 @@ namespace Mahjong
         {
             panelView.Mode = (modeComboBox.SelectedIndex == 1) ? PanelMode.Edit : PanelMode.Play;
         }
+
+        private void startHTTPViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new HttpView(panelView.Field);
+        }
     }
 }
