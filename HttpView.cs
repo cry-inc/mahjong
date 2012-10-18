@@ -48,7 +48,7 @@ namespace Mahjong
             {
                 e.Response.ContentType.Value = "image/png";
                 string image = path.Replace("/image/", "");
-                string filePath = "Tiles/" + image;
+                string filePath = "tiles/" + image;
                 if (File.Exists(filePath))
                     buffer = File.ReadAllBytes(filePath);
                 else

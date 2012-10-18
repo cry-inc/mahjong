@@ -26,16 +26,16 @@ namespace Mahjong
         {
             ToolStripItem s = (ToolStripItem)sender;
             string setup = "Setups/" + s.Text + ".txt";
-            panelView.Field = new Field(new ReverseGenerator(setup, "Tiles/tiles.txt"));
+            panelView.Field = new Field(new ReverseGenerator(setup, "tiles/tiles.txt"));
         }
 
         public string[] ListSetups()
         {
-            string[] setups = Directory.GetFiles("Setups/");
+            string[] setups = Directory.GetFiles("setups/");
             for (int i = 0; i < setups.Length; i++)
             {
                 setups[i] = setups[i].Replace(".txt", "");
-                setups[i] = setups[i].Replace("Setups/", "");
+                setups[i] = setups[i].Replace("setups/", "");
             }
             return setups;
         }

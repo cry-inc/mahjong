@@ -22,8 +22,8 @@ namespace Mahjong
         private PanelMode _mode = PanelMode.Play;
         private Tile _selected;
         private Dictionary<int, Image> _images = new Dictionary<int, Image>();
-        private Image _selImage = new Bitmap(Image.FromFile("Tiles/selected.png"));
-        private Image _tileImage = new Bitmap(Image.FromFile("Tiles/tile.png"));
+        private Image _selImage = new Bitmap(Image.FromFile("tiles/selected.png"));
+        private Image _tileImage = new Bitmap(Image.FromFile("tiles/tile.png"));
         private bool _drawGrid = false;
 
         public Field Field
@@ -85,7 +85,7 @@ namespace Mahjong
             if (!_images.ContainsKey(id))
             {
                 Bitmap copy;
-                using (Image img = Image.FromFile("Tiles/" + tile.Type.Name + ".png"))
+                using (Image img = Image.FromFile("tiles/" + tile.Type.Name + ".png"))
                 {
                     copy = new Bitmap(_tileImage);
                     Graphics.FromImage(copy).DrawImage(img, new Rectangle(0, 0, DRAWWIDTH, DRAWHEIGHT));
