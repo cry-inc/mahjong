@@ -15,15 +15,8 @@ namespace Mahjong
             _typeFile = typeFile;
         }
 
-        public void Generate(Field field)
+        public void Scramble(Field field)
         {
-            field.Types = TileType.LoadTileTypes(_typeFile);
-
-            field.Tiles = new Dictionary<int, Tile>();
-            
-            // Place the full set with a default tile type
-            LoadStructure(field, field.Types[0], _structureFile);
-
             List<TilePair> reversed = new List<TilePair>();
             while (field.Tiles.Count > 0)
             {
@@ -50,6 +43,18 @@ namespace Mahjong
                 field.Add(reversed[i].Tile1);
                 field.Add(reversed[i].Tile2);
             }
+        }
+
+        public void Generate(Field field)
+        {
+            field.Types = TileType.LoadTileTypes(_typeFile);
+            field.Tiles = new Dictionary<int, Tile>();
+            
+            // Place the full set without a tile type
+            LoadStructure(field, null, _structureFile);
+
+            // Set the tile types in a solveable order
+            Scramble(field);
         }
 
         private void LoadStructure(Field field, TileType type, string path)

@@ -24,7 +24,12 @@ namespace Mahjong
         private Dictionary<int, Image> _images = new Dictionary<int, Image>();
         private Image _selImage = new Bitmap(Image.FromFile("tiles/selected.png"));
         private Image _tileImage = new Bitmap(Image.FromFile("tiles/tile.png"));
+        private Image _disImage = new Bitmap(Image.FromFile("tiles/disabled.png"));
+        private Image _hintImage = new Bitmap(Image.FromFile("tiles/hint.png"));
         private bool _drawGrid = false;
+        private bool _showHint = false;
+        private bool _showMoveable = false;
+        private Tile _hint1, _hint2;
 
         public Field Field
         {
@@ -101,6 +106,12 @@ namespace Mahjong
             rect.Height = DRAWHEIGHT;
             g.DrawImage(texture, rect);
 
+            if (_showMoveable && !_field.CanMove(tile))
+                g.DrawImage(_disImage, rect);
+
+            if (_showHint && (tile == _hint1 || tile == _hint2))
+                g.DrawImage(_hintImage, rect);
+
             if (tile == _selected)
                 g.DrawImage(_selImage, rect);
         }
@@ -113,15 +124,28 @@ namespace Mahjong
             if (_drawGrid)
                 DrawTileGrid(e.Graphics);
 
-            Tile[] tiles = _field.GetSortedTiles();
+            if (_showHint)
+                FindHints();
 
             // Draw sorted tile list from bottom left to top right
+            Tile[] tiles = _field.GetSortedTiles();
             foreach (Tile t in tiles)
                 DrawTile(e.Graphics, t);
         }
 
         private void ClickPlay(MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Middle)
+            {
+                _showMoveable = !_showMoveable;
+                return;
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                _showHint = !_showHint;
+                return;
+            }
+
             int xp = (int)(e.X / CELLWIDTH);
             int yp = (int)(e.Y / CELLHEIGHT);
 
@@ -143,7 +167,10 @@ namespace Mahjong
                 }
                 else if ((result & PlayResult.NoFurtherMoves) != 0)
                 {
-                    MessageBox.Show("No further moves possible :(");
+                    DialogResult boxResult = MessageBox.Show("No further moves possible :( Scramble?", "Dead end",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (boxResult == DialogResult.Yes)
+                        _field.Scramble();
                 }
                 _selected = null;
             }
@@ -176,6 +203,26 @@ namespace Mahjong
                 ClickPlay(e);
 
             Invalidate();
+        }
+
+        private void FindHints()
+        {
+            List<Tile> tiles = new List<Tile>();
+            foreach (KeyValuePair<int, Tile> pair in _field.Tiles)
+                if (_field.CanMove(pair.Value))
+                    tiles.Add(pair.Value);
+
+            for (int i = 0; i < tiles.Count; i++)
+                for (int j = 0; j < tiles.Count; j++)
+                {
+                    if (i == j) continue;
+                    if (tiles[i].Type == tiles[j].Type)
+                    {
+                        _hint1 = tiles[i];
+                        _hint2 = tiles[j];
+                        return;
+                    }
+                }
         }
     }
 }

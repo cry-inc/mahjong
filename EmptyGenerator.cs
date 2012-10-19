@@ -9,5 +9,10 @@ namespace Mahjong
         {
             field.Tiles = new Dictionary<int, Tile>();
         }
+
+        public void Scramble(Field field)
+        {
+        
+        }
     }
 }

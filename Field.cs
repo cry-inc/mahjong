@@ -23,6 +23,7 @@ namespace Mahjong
         private DateTime _startTime;
         private TimeSpan _gameTime;
         private TileType[] _types;
+        private IGenerator _generator;
 
         public Dictionary<int, Tile> Tiles
         {
@@ -43,9 +44,15 @@ namespace Mahjong
 
         public Field(IGenerator generator)
         {
-            generator.Generate(this);
+            _generator = generator;
+            _generator.Generate(this);
             if (_tiles == null || _types == null)
                 throw new Exception("Generator failed. Tiles or TileTypes missing!");
+        }
+
+        public void Scramble()
+        {
+            _generator.Scramble(this);
         }
 
         private int CalcTileIndex(int x, int y, int z)
