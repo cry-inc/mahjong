@@ -28,10 +28,15 @@ namespace Mahjong
             string path = e.Request.Uri.LocalPath;
             byte[] buffer;
 
-            if (path == "/mahjong.json")
+            if (path == "/field.json")
             {
                 e.Response.ContentType.Value = "application/json";
-                buffer = Encoding.UTF8.GetBytes(BuildJson());
+                buffer = Encoding.UTF8.GetBytes(BuildFieldJson());
+            }
+            else if (path == "/types.json")
+            {
+                e.Response.ContentType.Value = "application/json";
+                buffer = Encoding.UTF8.GetBytes(BuildTypesJson());
             }
             else if (path == "/jquery.js")
             {
@@ -42,7 +47,7 @@ namespace Mahjong
             {
                 e.Response.ContentType.Value = "application/json";
                 DoAction(path.Replace("/action/", ""));
-                buffer = Encoding.UTF8.GetBytes(BuildJson());
+                buffer = Encoding.UTF8.GetBytes(BuildFieldJson());
             }
             else if (path.StartsWith("/image/"))
             {
@@ -78,14 +83,14 @@ namespace Mahjong
             }
         }
 
-        private string BuildJson()
+        private string BuildFieldJson()
         {
             
             Tile[] tiles = _field.GetSortedTiles();
             List<string> tilesJson = new List<string>();
             foreach (Tile tile in tiles)
             {
-                string type = (tile != null) ? tile.Type.Name : "tile";
+                string type = (tile != null) ? tile.Type.Name : "empty";
                 string tileJson = "          {\n";
                 tileJson += "              \"x\": " + tile.X + ",\n";
                 tileJson += "              \"y\": " + tile.Y + ",\n";
@@ -106,6 +111,27 @@ namespace Mahjong
             string.Join(",\n", tilesJson.ToArray()) + "\n" +  
             "       ]\n" +
             "   }\n" +
+            "}\n";
+        }
+
+        private string BuildTypesJson()
+        {
+            List<string> typesJson = new List<string>();
+            for (int i = 0; i < _field.Types.Length; i++)
+            {
+                string type = 
+                    "       {\n" +
+                    "           \"id\": " + _field.Types[i].Id + ",\n" +
+                    "           \"name\": \"" + _field.Types[i].Name + "\"\n" +
+                    "       }";
+                typesJson.Add(type);
+            }
+
+            return
+            "{\n" +
+            "   \"types\": [\n" +
+            string.Join(",\n", typesJson.ToArray()) + "\n" +
+            "   ]\n" +
             "}\n";
         }
     }

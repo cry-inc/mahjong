@@ -17,12 +17,12 @@ namespace Mahjong
 
         public void Generate(Field field)
         {
-            TileType[] types = TileType.LoadTileTypes(_typeFile);
+            field.Types = TileType.LoadTileTypes(_typeFile);
 
             field.Tiles = new Dictionary<int, Tile>();
             
             // Place the full set with a default tile type
-            LoadStructure(field, types[0], _structureFile);
+            LoadStructure(field, field.Types[0], _structureFile);
 
             List<TilePair> reversed = new List<TilePair>();
             while (field.Tiles.Count > 0)
@@ -44,9 +44,9 @@ namespace Mahjong
             Random random = new Random();
             for (int i = reversed.Count - 1; i >= 0; i--)
             {
-                int typeIndex = random.Next() % types.Length;
-                reversed[i].Tile1.Type = types[typeIndex];
-                reversed[i].Tile2.Type = types[typeIndex];
+                int typeIndex = random.Next() % field.Types.Length;
+                reversed[i].Tile1.Type = field.Types[typeIndex];
+                reversed[i].Tile2.Type = field.Types[typeIndex];
                 field.Add(reversed[i].Tile1);
                 field.Add(reversed[i].Tile2);
             }

@@ -6,16 +6,20 @@
         <script src="jquery.js"></script>
         <script type="text/javascript">
 
+            var tiles = new Array();
+            var tileCounter = 0;
+            var numberOfAllTiles = -1;
+        
             function redraw() {
-                $.getJSON('/mahjong.json', drawJsonData);
+                $.getJSON('/field.json', processFieldData);
             }
             
-            function drawJsonData(json) {
+            function processFieldData(json) {
             
                 var canvas = document.getElementById('field');
                 canvas = canvas.getContext('2d');
-                //canvas.fillStyle = "rgb(200,0,0)";
-                //canvas.fillRect(10, 10, 55, 55);
+                canvas.fillStyle = "rgb(255, 255, 255)";
+                canvas.fillRect(0, 0, 1200, 720);
             
                 //console.log(json['field']['fieldwidth'] * 30);
                 //console.log(json['field']['fieldheight'] * 20);
@@ -25,22 +29,51 @@
                 $.each(json['field']['tiles'], function(i, item) {
                     var x = item.x * 30 - 5;
                     var y = item.y * 20 - 5 - 5 * item.z;
-                    drawImage(canvas, "tile", x, y);
-                    drawImage(canvas, item.type, x, y);
+                    drawTile(canvas, item.type, x, y);
                 });
-
-                //drawImage(canvas, "tile", 15, 15);
+                
+                setTimeout(redraw, 200);
             }
             
-            function drawImage(canvas, imgName, x, y) {
-                var imageObj = new Image();
-                imageObj.onload = function() { canvas.drawImage(imageObj, x, y); };
-                imageObj.src = "image/" + imgName + ".png";
+            function drawTile(canvas, imgName, x, y) {
+                canvas.drawImage(tiles['tile'], x, y);
+                canvas.drawImage(tiles[imgName], x, y);
+            }
+            
+            function loadTiles() {
+                $.getJSON('/types.json', processTypesData);
+            }
+            
+            function processTypesData(json) {
+                numberOfAllTiles = json['types'].length;
+                $.each(json['types'], function(i, item) {
+                    tiles[item.name] = new Image();
+                    tiles[item.name].onLoad = tileLoaded();
+                    tiles[item.name].src = 'image/'  + item.name + '.png';
+                });
+                
+                var otherImages = new Array();
+                otherImages[0] = 'selected';
+                otherImages[1] = 'marked';
+                otherImages[2] = 'empty';
+                otherImages[3] = 'tile';
+                numberOfAllTiles += otherImages.length;
+                $.each(otherImages, function(i, item) {
+                    tiles[item] = new Image();
+                    tiles[item].onLoad = tileLoaded();
+                    tiles[item].src = 'image/'  + item + '.png';
+                });
+            }
+            
+            function tileLoaded() {
+                tileCounter++;
+                if (tileCounter == numberOfAllTiles) redraw();
             }
         
         </script>
     </head>
-    <body onload="redraw();">
+    <body onload="loadTiles();">
         <canvas style="border: 1px solid black" id="field" width="1200" height="720"></canvas>
+        
     </body>
 </html>
