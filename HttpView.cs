@@ -13,6 +13,8 @@ namespace Mahjong
     {
         private Field _field;
         private HttpListener _listener;
+        private bool _showHint = false;
+        private bool _showMoveable = false;
 
         public HttpView(Field field)
         {
@@ -69,33 +71,45 @@ namespace Mahjong
         {
             string[] splitted = action.Split('|');
 
-            if (splitted.Length != 4)
-                return;
-
-            int x1, y1, x2, y2;
-            if (int.TryParse(splitted[0], out x1) && int.TryParse(splitted[1], out y1) && int.TryParse(splitted[2], out x2) && int.TryParse(splitted[3], out y2))
+            if (splitted.Length == 4)
             {
-                Tile t1 = _field.GetTileFromCoord(x1, y1);
-                Tile t2 = _field.GetTileFromCoord(x2, y2);
-                if (t1 == null || t2 == null)
-                    return;
-                PlayResult result = _field.Play(t1, t2);
+                int x1, y1, x2, y2;
+                if (int.TryParse(splitted[0], out x1) && int.TryParse(splitted[1], out y1) && int.TryParse(splitted[2], out x2) && int.TryParse(splitted[3], out y2))
+                {
+                    Tile t1 = _field.GetTileFromCoord(x1, y1);
+                    Tile t2 = _field.GetTileFromCoord(x2, y2);
+                    if (t1 == null || t2 == null)
+                        return;
+                    PlayResult result = _field.Play(t1, t2);
+                }
             }
+            else if (splitted.Length == 1 && action == "moveable")
+                _showMoveable = !_showMoveable;
+            else if (splitted.Length == 1 && action == "hint")
+                _showHint = !_showHint;
         }
 
         private string BuildFieldJson()
         {
-            
+            TilePair hintPair = null;
+            if (_showHint)
+                hintPair = _field.GetHint();
+
             Tile[] tiles = _field.GetSortedTiles();
             List<string> tilesJson = new List<string>();
             foreach (Tile tile in tiles)
             {
+                string disabled = !_field.CanMove(tile) && _showMoveable ? "true" : "false";
+                string hint = _showHint && hintPair != null && (tile == hintPair.Tile1 || tile == hintPair.Tile2) ? "true" : "false";
                 string type = (tile != null) ? tile.Type.Name : "empty";
                 string tileJson = "          {\n";
                 tileJson += "              \"x\": " + tile.X + ",\n";
                 tileJson += "              \"y\": " + tile.Y + ",\n";
                 tileJson += "              \"z\": " + tile.Z + ",\n";
-                tileJson += "              \"type\": \"" + type + "\"\n";
+                tileJson += "              \"type\": \"" + type + "\",\n";
+                tileJson += "              \"selected\": false,\n";
+                tileJson += "              \"hint\": " + hint + ",\n";
+                tileJson += "              \"disabled\": " + disabled + "\n";
                 tileJson += "          }";
                 tilesJson.Add(tileJson);
             }

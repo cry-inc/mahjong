@@ -9,8 +9,9 @@ namespace Mahjong
         DifferentTypes = 1,
         CanNotMoveTile = 2,
         ValidMove = 4,
-        NoFurtherMoves = 8,
-        Won = 16,
+        InvalidMove = 8,
+        NoFurtherMoves = 16,
+        Won = 32,
     }
 
     class Field
@@ -103,6 +104,9 @@ namespace Mahjong
                 _startTime = DateTime.Now;
                 _started = true;
             }
+
+            if (tile1 == tile2)
+                return PlayResult.InvalidMove;
 
             if (tile1.Type != tile2.Type)
                 return PlayResult.DifferentTypes;
@@ -260,6 +264,24 @@ namespace Mahjong
             bool ul = up && CanMoveLeft(tile);
             bool ur = up && CanMoveRight(tile);
             return ul || ur;
+        }
+
+        public TilePair GetHint()
+        {
+            List<Tile> tiles = new List<Tile>();
+            foreach (KeyValuePair<int, Tile> pair in _tiles)
+                if (CanMove(pair.Value))
+                    tiles.Add(pair.Value);
+
+            for (int i = 0; i < tiles.Count; i++)
+                for (int j = 0; j < tiles.Count; j++)
+                {
+                    if (i == j) continue;
+                    if (tiles[i].Type == tiles[j].Type)
+                        return new TilePair(tiles[i], tiles[j]);
+                }
+
+            return null;
         }
     }
 }

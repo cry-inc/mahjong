@@ -207,22 +207,12 @@ namespace Mahjong
 
         private void FindHints()
         {
-            List<Tile> tiles = new List<Tile>();
-            foreach (KeyValuePair<int, Tile> pair in _field.Tiles)
-                if (_field.CanMove(pair.Value))
-                    tiles.Add(pair.Value);
-
-            for (int i = 0; i < tiles.Count; i++)
-                for (int j = 0; j < tiles.Count; j++)
-                {
-                    if (i == j) continue;
-                    if (tiles[i].Type == tiles[j].Type)
-                    {
-                        _hint1 = tiles[i];
-                        _hint2 = tiles[j];
-                        return;
-                    }
-                }
+            TilePair hint = _field.GetHint();
+            if (hint != null)
+            {
+                _hint1 = hint.Tile1;
+                _hint2 = hint.Tile2;
+            }
         }
     }
 }

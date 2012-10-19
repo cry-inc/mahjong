@@ -9,35 +9,39 @@
             var tiles = new Array();
             var tileCounter = 0;
             var numberOfAllTiles = -1;
+            
+            var selectedX = -1;
+            var selectedY = -1;
+            var selected = false;
         
             function redraw() {
                 $.getJSON('/field.json', processFieldData);
             }
             
             function processFieldData(json) {
-            
                 var canvas = document.getElementById('field');
                 canvas = canvas.getContext('2d');
                 canvas.fillStyle = "rgb(255, 255, 255)";
                 canvas.fillRect(0, 0, 1200, 720);
-            
-                //console.log(json['field']['fieldwidth'] * 30);
-                //console.log(json['field']['fieldheight'] * 20);
                 //canvas.width = json['field']['fieldwidth'] * 30;
                 //canvas.height = json['field']['fieldheight'] * 20;
-
                 $.each(json['field']['tiles'], function(i, item) {
-                    var x = item.x * 30 - 5;
-                    var y = item.y * 20 - 5 - 5 * item.z;
-                    drawTile(canvas, item.type, x, y);
+                    drawTile(canvas, item);
                 });
-                
                 setTimeout(redraw, 200);
             }
             
-            function drawTile(canvas, imgName, x, y) {
+            function drawTile(canvas, tile) {
+                var x = tile.x * 30 - 5;
+                var y = tile.y * 20 - 5 - 5 * tile.z;
                 canvas.drawImage(tiles['tile'], x, y);
-                canvas.drawImage(tiles[imgName], x, y);
+                canvas.drawImage(tiles[tile.type], x, y);
+                if (tile.hint)
+                    canvas.drawImage(tiles['hint'], x, y);
+                if (tile.disabled)
+                    canvas.drawImage(tiles['disabled'], x, y);
+                if (tile.selected)
+                    canvas.drawImage(tiles['selected'], x, y);
             }
             
             function loadTiles() {
@@ -51,12 +55,12 @@
                     tiles[item.name].onLoad = tileLoaded();
                     tiles[item.name].src = 'image/'  + item.name + '.png';
                 });
-                
                 var otherImages = new Array();
                 otherImages[0] = 'selected';
-                otherImages[1] = 'marked';
+                otherImages[1] = 'hint';
                 otherImages[2] = 'empty';
                 otherImages[3] = 'tile';
+                otherImages[4] = 'disabled';
                 numberOfAllTiles += otherImages.length;
                 $.each(otherImages, function(i, item) {
                     tiles[item] = new Image();
@@ -69,11 +73,48 @@
                 tileCounter++;
                 if (tileCounter == numberOfAllTiles) redraw();
             }
-        
+            
+            function processAction(json) {
+                //alert('done');
+            }
+            
+            function moveableClick(e) {
+                var url = '/action/moveable';
+                $.getJSON(url, processAction);
+            }
+            
+            function hintClick(e) {
+                var url = '/action/hint';
+                $.getJSON(url, processAction);
+            }
+            
+            function canvasClick (e) {
+                var x = e.pageX - this.offsetLeft;
+                var y = e.pageY - this.offsetTop;
+                x = Math.floor(x / 30);
+                y = Math.floor(y / 20);
+                
+                if (selected) {
+                    var url = '/action/' + selectedX + '|' + selectedY + '|' + x + '|' + y;
+                    $.getJSON(url, processAction);
+                    selected = false;
+                } else {
+                    selectedX = x;
+                    selectedY = y;
+                    selected = true;
+                }
+            }
+
         </script>
     </head>
     <body onload="loadTiles();">
         <canvas style="border: 1px solid black" id="field" width="1200" height="720"></canvas>
-        
+        <button id="moveableButton" type="button">Toggle Show Moveables</button>
+        <button id="hintButton" type="button">Toggle Show Hint</button>
+        <script type="text/javascript">
+            $("#moveableButton").click(moveableClick);
+            $("#hintButton").click(hintClick);
+            $("#field").click(canvasClick);
+        </script>
     </body>
 </html>
