@@ -13,6 +13,7 @@ namespace Mahjong
     {
         private Field _field;
         private HttpListener _listener;
+        private Tile _selected = null;
         private bool _showHint = false;
         private bool _showMoveable = false;
 
@@ -69,24 +70,32 @@ namespace Mahjong
 
         private void DoAction(string action)
         {
-            string[] splitted = action.Split('|');
-
-            if (splitted.Length == 4)
-            {
-                int x1, y1, x2, y2;
-                if (int.TryParse(splitted[0], out x1) && int.TryParse(splitted[1], out y1) && int.TryParse(splitted[2], out x2) && int.TryParse(splitted[3], out y2))
-                {
-                    Tile t1 = _field.GetTileFromCoord(x1, y1);
-                    Tile t2 = _field.GetTileFromCoord(x2, y2);
-                    if (t1 == null || t2 == null)
-                        return;
-                    PlayResult result = _field.Play(t1, t2);
-                }
-            }
-            else if (splitted.Length == 1 && action == "moveable")
+            if (action.StartsWith("moveable"))
                 _showMoveable = !_showMoveable;
-            else if (splitted.Length == 1 && action == "hint")
+            else if (action.StartsWith("hint"))
                 _showHint = !_showHint;
+            else if (action.StartsWith("select"))
+            {
+                string[] splitted = action.Split(new char[]{'|'}, 
+                    StringSplitOptions.RemoveEmptyEntries);
+                if (splitted.Length != 3)
+                    return;
+
+                int x, y;
+                if (int.TryParse(splitted[1], out x) && int.TryParse(splitted[2], out y))
+                {
+                    Tile tile = _field.GetTileFromCoord(x, y);
+                    if (tile == null)
+                        return;
+                    else if (_selected == null || _selected == tile)
+                        _selected = tile;
+                    else
+                    {
+                        _field.Play(_selected, tile);
+                        _selected = null;
+                    }
+                }
+            }  
         }
 
         private string BuildFieldJson()
@@ -99,6 +108,7 @@ namespace Mahjong
             List<string> tilesJson = new List<string>();
             foreach (Tile tile in tiles)
             {
+                string selected = (tile == _selected) ? "true" : "false";
                 string disabled = !_field.CanMove(tile) && _showMoveable ? "true" : "false";
                 string hint = _showHint && hintPair != null && (tile == hintPair.Tile1 || tile == hintPair.Tile2) ? "true" : "false";
                 string type = (tile != null) ? tile.Type.Name : "empty";
@@ -107,7 +117,7 @@ namespace Mahjong
                 tileJson += "              \"y\": " + tile.Y + ",\n";
                 tileJson += "              \"z\": " + tile.Z + ",\n";
                 tileJson += "              \"type\": \"" + type + "\",\n";
-                tileJson += "              \"selected\": false,\n";
+                tileJson += "              \"selected\": " + selected + ",\n";
                 tileJson += "              \"hint\": " + hint + ",\n";
                 tileJson += "              \"disabled\": " + disabled + "\n";
                 tileJson += "          }";

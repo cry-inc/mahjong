@@ -9,10 +9,6 @@
             var tiles = new Array();
             var tileCounter = 0;
             var numberOfAllTiles = -1;
-            
-            var selectedX = -1;
-            var selectedY = -1;
-            var selected = false;
         
             function redraw() {
                 $.getJSON('/field.json', processFieldData);
@@ -93,16 +89,8 @@
                 var y = e.pageY - this.offsetTop;
                 x = Math.floor(x / 30);
                 y = Math.floor(y / 20);
-                
-                if (selected) {
-                    var url = '/action/' + selectedX + '|' + selectedY + '|' + x + '|' + y;
-                    $.getJSON(url, processAction);
-                    selected = false;
-                } else {
-                    selectedX = x;
-                    selectedY = y;
-                    selected = true;
-                }
+                var url = '/action/select|' + x + '|' + y;
+                $.getJSON(url, processAction);
             }
 
         </script>
