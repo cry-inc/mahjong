@@ -75,15 +75,15 @@ namespace Mahjong
             _tiles.Remove(index);
         }
 
-        private static int CompareTilesByZ(Tile tile1, Tile tile2)
+        private static int TileDrawingOrder(Tile tile1, Tile tile2)
         {
             if (tile1.Z == tile2.Z)
             {
-                if (tile1.X == tile2.X)
+                if (tile1.Y == tile2.Y)
                 {
-                    return tile1.Y - tile2.Y;
+                    return tile1.X - tile2.X;
                 }
-                else return tile1.X - tile2.X;
+                else return tile1.Y - tile2.Y;
             }
             else return tile1.Z - tile2.Z;
         }
@@ -93,7 +93,7 @@ namespace Mahjong
             List<Tile> tiles = new List<Tile>();
             foreach (KeyValuePair<int, Tile> pair in _tiles)
                 tiles.Add(pair.Value);
-            tiles.Sort(CompareTilesByZ);
+            tiles.Sort(TileDrawingOrder);
             return tiles.ToArray();
         }
 
