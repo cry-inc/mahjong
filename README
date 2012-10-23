@@ -1,13 +1,11 @@
 This is a simple Mahjong solitaire game. It is written in C# and
 uses the logos of various open source related projects as tile images.
+A screenshot of the running game is included (Mahjong.png).
 
 The game was only a quick POC for another implementation written in Scala.
 
-There are no advanced features like a scoreboard or different tile setups.
-But do not worry, the included setup will be differentin each game because
-of the included randomization.
-
-There are two notable features of this game:
+There are no advanced features like a scoreboard or different tile setups,
+but there are two other notable things included:
 - Play on a web interface using the embedded web server and HTML5/jQuery
   (Same graphics as the WinForms UI, you can reach the web interface at
   http://localhost:8080/!)
@@ -17,7 +15,7 @@ There are two notable features of this game:
 You have to replace the "setup.txt" to play with your own tile setup.
 
 The web interface was successfully tested in Firefox, Chrome and Opera.
-IE 9 does display the tiles correctly, but does not accept user input.
+IE 9 does display the tiles correctly, but does not accept any user input.
 
 Included third party (open source) software:
 jQuery - http://jquery.com/
