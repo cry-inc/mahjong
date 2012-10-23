@@ -177,7 +177,6 @@ namespace Mahjong
         {
             Tile topmostTile = null;
 
-            // TODO: implement without iterating over all tiles?
             foreach (KeyValuePair<int, Tile> pair in _tiles)
             {
                 Tile tile = pair.Value;

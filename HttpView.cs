@@ -6,7 +6,6 @@ using System.IO;
 using HttpServer;
 using HttpServer.Headers;
 
-
 namespace Mahjong
 {
     class HttpView
@@ -23,6 +22,11 @@ namespace Mahjong
             _listener = HttpListener.Create(System.Net.IPAddress.Any, 8080);
             _listener.RequestReceived += OnRequest;
             _listener.Start(5);
+        }
+
+        public void Close()
+        {
+            _listener.Stop();
         }
 
         private void OnRequest(object sender, RequestEventArgs e)
@@ -91,7 +95,8 @@ namespace Mahjong
                         _selected = tile;
                     else
                     {
-                        _field.Play(_selected, tile);
+                        if (_field.Play(_selected, tile) == PlayResult.NoFurtherMoves)
+                            _field.Scramble();
                         _selected = null;
                     }
                 }

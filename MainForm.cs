@@ -7,53 +7,45 @@ namespace Mahjong
 {
     public partial class MainForm : Form
     {
+        private Field _field;
+        private HttpView _httpView;
+
         public MainForm()
         {
             InitializeComponent();
 
-            string[] setups = ListSetups();
-            foreach (string setup in setups)
+            if (Environment.CommandLine.IndexOf("-editor") != -1)
             {
-                ToolStripItem tsi = gameToolStripMenuItem.DropDownItems.Add(setup);
-                tsi.Click += new EventHandler(tsi_Click);
+                //Edit Mode
+                panelView.Mode = PanelMode.Edit;
+                panelView.DrawGrid = true;
+                startMenuItem.Visible = false;
+                browserMenuItem.Visible = false;
+                ClearGame();
             }
-
-            gridComboBox.SelectedIndex = 0;
-            modeComboBox.SelectedIndex = 0;
+            else {
+                // Play Mode
+                saveMenuItem.Visible = false;
+                clearMenuItem.Visible = false;
+                RestartGame();
+            }
         }
 
-        void tsi_Click(object sender, EventArgs e)
+        void ClearGame()
         {
-            ToolStripItem s = (ToolStripItem)sender;
-            string setup = "Setups/" + s.Text + ".txt";
-            panelView.Field = new Field(new ReverseGenerator(setup, "tiles/tiles.txt"));
+            _field = new Field(new EmptyGenerator());
+            panelView.Field = _field;
         }
 
-        public string[] ListSetups()
+        void RestartGame()
         {
-            string[] setups = Directory.GetFiles("setups/");
-            for (int i = 0; i < setups.Length; i++)
+            if (_httpView != null)
             {
-                setups[i] = setups[i].Replace(".txt", "");
-                setups[i] = setups[i].Replace("setups/", "");
+                _httpView.Close();
             }
-            return setups;
-        }
-
-        private void saveTileFieldToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string text = "";
-
-            if (panelView.Field == null)
-                return;
-
-            if (panelView.Field.Tiles.Count % 2 != 0)
-                MessageBox.Show("Number of tiles modulo two is not zero!");
-
-            foreach (KeyValuePair<int, Tile> pair in panelView.Field.Tiles)
-                text += pair.Value.X + " " + pair.Value.Y + " " + pair.Value.Z + "\n";
-
-            File.WriteAllText("dump.txt", text);
+            _field = new Field(new ReverseGenerator("setup.txt", "tiles/tiles.txt"));
+            _httpView = new HttpView(_field);
+            panelView.Field = _field;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -61,24 +53,39 @@ namespace Mahjong
             Application.Exit();
         }
 
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        private void startMenuItem_Click(object sender, EventArgs e)
         {
-            panelView.Field = new Field(new EmptyGenerator());
+            RestartGame();
         }
 
-        private void gridComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void playInBrowserToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            panelView.DrawGrid = gridComboBox.SelectedIndex % 2 == 0;
+            System.Diagnostics.Process.Start("http://localhost:8080");
         }
 
-        private void modeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void clearMenuItem_Click(object sender, EventArgs e)
         {
-            panelView.Mode = (modeComboBox.SelectedIndex == 1) ? PanelMode.Edit : PanelMode.Play;
+            ClearGame();
         }
 
-        private void startHTTPViewToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveMenuItem_Click(object sender, EventArgs e)
         {
-            new HttpView(panelView.Field);
+            string text = "";
+
+            if (panelView.Field.Tiles.Count % 2 != 0)
+            {
+                MessageBox.Show("Number of tiles modulo two is not zero!");
+                return;
+            }
+
+            foreach (KeyValuePair<int, Tile> pair in panelView.Field.Tiles)
+                text += pair.Value.X + " " + pair.Value.Y + " " + pair.Value.Z + "\n";
+
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.FileName = "newsetup.txt";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+                File.WriteAllText(dialog.FileName, text);
         }
     }
 }

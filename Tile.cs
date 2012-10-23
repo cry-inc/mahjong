@@ -29,9 +29,6 @@ namespace Mahjong
             set { _type = value; }
         }
 
-        public Rectangle Rect
-        { get { return new Rectangle(_x, _y, WIDTH, HEIGHT); } }
-
         public bool IsInside(float x, float y)
         {
             if (x >= _x && y >= _y && x < _x + WIDTH && y < _y + HEIGHT)

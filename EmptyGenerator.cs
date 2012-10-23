@@ -8,11 +8,9 @@ namespace Mahjong
         public void Generate(Field field)
         {
             field.Tiles = new Dictionary<int, Tile>();
+            field.Types = new TileType[0];
         }
 
-        public void Scramble(Field field)
-        {
-        
-        }
+        public void Scramble(Field field) { }
     }
 }

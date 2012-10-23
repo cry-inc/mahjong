@@ -75,12 +75,12 @@ namespace Mahjong
             for (int x = 1; x <= Field.WIDTH-1; x++)
             {
                 float px = x * CELLWIDTH;
-                g.DrawLine(Pens.Black, px, 0, px, Field.HEIGHT * CELLHEIGHT);
+                g.DrawLine(Pens.White, px, 0, px, Field.HEIGHT * CELLHEIGHT);
             }
             for (int y = 1; y <= Field.HEIGHT-1; y++)
             {
                 float py = y * CELLHEIGHT;
-                g.DrawLine(Pens.Black, 0, py, Field.WIDTH * CELLWIDTH, py);
+                g.DrawLine(Pens.White, 0, py, Field.WIDTH * CELLWIDTH, py);
             }
         }
 
@@ -131,6 +131,11 @@ namespace Mahjong
             Tile[] tiles = _field.GetSortedTiles();
             foreach (Tile t in tiles)
                 DrawTile(e.Graphics, t);
+
+            if (_mode == PanelMode.Play)
+                e.Graphics.DrawString("Middle Mouse = Toggle Show Moveable Tiles\nRight Mouse = Toggle Show Hint", DefaultFont, Brushes.Black, 5, 5);
+            else
+                e.Graphics.DrawString("Left Mouse = Place Tile\nRight Mouse = Remove Tile", DefaultFont, Brushes.Black, 5, 5);
         }
 
         private void ClickPlay(MouseEventArgs e)
@@ -163,7 +168,7 @@ namespace Mahjong
                 PlayResult result = _field.Play(_selected, clicked);
                 if (result == PlayResult.Won)
                 {
-                    MessageBox.Show("You won the game in " + _field.GameTime.TotalSeconds + " seconds !");
+                    MessageBox.Show("You won the game in " + Math.Ceiling(_field.GameTime.TotalSeconds) + " seconds !", "You won!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else if ((result & PlayResult.NoFurtherMoves) != 0)
                 {
