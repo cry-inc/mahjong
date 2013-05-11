@@ -1,6 +1,7 @@
 This is a simple Mahjong solitaire game. It is written in C# and
 uses the logos of various open source related projects as tile images.
-A screenshot of the running game is included (Mahjong.png).
+
+![Screenshot](/Mahjong.png)
 
 The game was only a quick POC for another implementation written in Scala.
 
@@ -22,5 +23,5 @@ jQuery - http://jquery.com/
 httpserver - http://webserver.codeplex.com/
 
 I removed the System.Web dependency of the httpserver, so it will run
-on the .Net _Client_ Profile. To archive this, I used this file:
+on the .Net _Client_ Profile. To achieve this, I used this file:
 http://google-gdata.googlecode.com/svn/trunk/clients/cs/src/core/HttpUtility.cs
