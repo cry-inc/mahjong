@@ -60,7 +60,7 @@ namespace Mahjong
 
         private void playInBrowserToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://localhost:8080");
+            System.Diagnostics.Process.Start("http://127.0.0.1:8080");
         }
 
         private void clearMenuItem_Click(object sender, EventArgs e)

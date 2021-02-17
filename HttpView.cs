@@ -19,7 +19,7 @@ namespace Mahjong
         public HttpView(Field field)
         {
             _field = field;
-            _listener = HttpListener.Create(System.Net.IPAddress.Any, 8080);
+            _listener = HttpListener.Create(System.Net.IPAddress.Loopback, 8080);
             _listener.RequestReceived += OnRequest;
             _listener.Start(5);
         }
