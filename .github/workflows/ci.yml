@@ -1,0 +1,22 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      Solution: Mahjong.sln
+      Configuration: Release
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Build the application
+      run: msbuild $env:Solution /p:Configuration=$env:Configuration
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: Mahjong
+        path: bin\Release
