@@ -8,11 +8,13 @@ namespace Mahjong
     {
         private string _structureFile;
         private string _typeFile;
+        private Random _random = null;
 
         public ReverseGenerator(string structureFile, string typeFile)
         {
             _structureFile = structureFile;
             _typeFile = typeFile;
+            _random = new Random();
         }
 
         public void Scramble(Field field)
@@ -34,10 +36,9 @@ namespace Mahjong
             }
 
             // Read the list from behind and and get random a random tile type for each pair to build the game
-            Random random = new Random();
             for (int i = reversed.Count - 1; i >= 0; i--)
             {
-                int typeIndex = random.Next() % field.Types.Length;
+                int typeIndex = _random.Next() % field.Types.Length;
                 reversed[i].Tile1.Type = field.Types[typeIndex];
                 reversed[i].Tile2.Type = field.Types[typeIndex];
                 field.Add(reversed[i].Tile1);
