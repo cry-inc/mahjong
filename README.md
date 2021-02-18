@@ -1,3 +1,5 @@
+![CI](https://github.com/cry-inc/mahjong/workflows/CI/badge.svg?branch=master)
+
 This is a simple Mahjong solitaire game. It is written in C# and
 uses the logos of various open source projects as tile images.
 
