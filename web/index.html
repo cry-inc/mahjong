@@ -3,30 +3,29 @@
     <head>
         <meta charset="UTF-8">
         <title>Mahjong</title>
-        <script src="jquery.js"></script>
         <script type="text/javascript">
 
             var tiles = new Array();
             var tileCounter = 0;
             var numberOfAllTiles = -1;
-        
+
             function redraw() {
-                $.getJSON('/field.json', processFieldData);
+                fetch('/field.json')
+                  .then(response => response.json())
+                  .then(processFieldData);
             }
-            
+
             function processFieldData(json) {
                 var canvas = document.getElementById('field');
                 canvas = canvas.getContext('2d');
                 canvas.fillStyle = "rgb(255, 255, 255)";
                 canvas.fillRect(0, 0, 1200, 720);
-                //canvas.width = json['field']['fieldwidth'] * 30;
-                //canvas.height = json['field']['fieldheight'] * 20;
-                $.each(json['field']['tiles'], function(i, item) {
+                json['field']['tiles'].forEach(function(item) {
                     drawTile(canvas, item);
                 });
                 setTimeout(redraw, 200);
             }
-            
+
             function drawTile(canvas, tile) {
                 var x = tile.x * 30 - 5;
                 var y = tile.y * 20 - 5 - 5 * tile.z;
@@ -39,14 +38,16 @@
                 if (tile.selected)
                     canvas.drawImage(tiles['selected'], x, y);
             }
-            
+
             function loadTiles() {
-                $.getJSON('/types.json', processTypesData);
+                fetch('/types.json')
+                  .then(response => response.json())
+                  .then(processTypesData);
             }
-            
+
             function processTypesData(json) {
                 numberOfAllTiles = json['types'].length;
-                $.each(json['types'], function(i, item) {
+                json['types'].forEach(function(item) {
                     tiles[item.name] = new Image();
                     tiles[item.name].onLoad = tileLoaded();
                     tiles[item.name].src = 'image/'  + item.name + '.png';
@@ -58,51 +59,45 @@
                 otherImages[3] = 'tile';
                 otherImages[4] = 'disabled';
                 numberOfAllTiles += otherImages.length;
-                $.each(otherImages, function(i, item) {
+                otherImages.forEach(function(item) {
                     tiles[item] = new Image();
                     tiles[item].onLoad = tileLoaded();
                     tiles[item].src = 'image/'  + item + '.png';
                 });
             }
-            
+
             function tileLoaded() {
                 tileCounter++;
                 if (tileCounter == numberOfAllTiles) redraw();
             }
-            
-            function processAction(json) {
-                //alert('done');
+
+            function moveableClick() {
+                fetch('/action/moveable');
             }
-            
-            function moveableClick(e) {
-                var url = '/action/moveable';
-                $.getJSON(url, processAction);
+
+            function hintClick() {
+                fetch('/action/hint');
             }
-            
-            function hintClick(e) {
-                var url = '/action/hint';
-                $.getJSON(url, processAction);
-            }
-            
-            function canvasClick (e) {
+
+            function canvasClick(e) {
                 var x = e.pageX - this.offsetLeft;
                 var y = e.pageY - this.offsetTop;
                 x = Math.floor(x / 30);
                 y = Math.floor(y / 20);
-                var url = '/action/select|' + x + '|' + y;
-                $.getJSON(url, processAction);
+                fetch('/action/select|' + x + '|' + y);
             }
 
         </script>
     </head>
-    <body onload="loadTiles();">
+    <body>
         <canvas style="border: 1px solid black" id="field" width="1200" height="720"></canvas><br />
         <button id="moveableButton" type="button">Toggle Show Moveables</button>
         <button id="hintButton" type="button">Toggle Show Hint</button>
         <script type="text/javascript">
-            $("#moveableButton").click(moveableClick);
-            $("#hintButton").click(hintClick);
-            $("#field").click(canvasClick);
+            document.getElementById("moveableButton").onclick = moveableClick;
+            document.getElementById("hintButton").onclick = hintClick;
+            document.getElementById("field").onclick = canvasClick;
+            loadTiles();
         </script>
     </body>
 </html>

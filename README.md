@@ -14,11 +14,7 @@ but there are two other notable things included:
   Start the executable with the argument -editor to activate it.
   You have to replace the file "setup.txt" to play with your custom setup.
 
-The web interface was successfully tested in Firefox, Chrome and Opera.
-IE 9 does display the tiles correctly, but does not accept any user input.
-
 Included third party software:
-* jQuery - http://jquery.com/
 * httpserver - http://webserver.codeplex.com/
 
 I removed the System.Web dependency of the httpserver, so it will run
