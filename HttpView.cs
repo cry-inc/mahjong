@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-
-using HttpServer;
-using HttpServer.Headers;
+using System.Net;
+using System.Text;
+using System.Threading;
 
 namespace Mahjong
 {
@@ -15,50 +14,70 @@ namespace Mahjong
         private Tile _selected = null;
         private bool _showHint = false;
         private bool _showMoveable = false;
+        private bool _running = false;
+        private Thread _thread = null;
 
         public HttpView(Field field)
         {
             _field = field;
-            _listener = HttpListener.Create(System.Net.IPAddress.Loopback, 8080);
-            _listener.RequestReceived += OnRequest;
-            _listener.Start(5);
+            _listener = new HttpListener();
+            _listener.Prefixes.Add("http://127.0.0.1:8080/");
+            _listener.Start();
+            _running = true;
+            _thread = new Thread(HttpWorker);
+            _thread.IsBackground = true;
+            _thread.Start();
+        }
+
+        public void HttpWorker()
+        {
+            while (_running)
+            {
+                try
+                {
+                    HttpListenerContext context = _listener.GetContext();
+                    OnRequest(context.Request, context.Response);
+                }
+                catch {}
+            }
         }
 
         public void Close()
         {
+            _running = false;
             _listener.Stop();
+            _thread.Join();
         }
 
-        private void OnRequest(object sender, RequestEventArgs e)
+        private void OnRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
-            e.Response.Connection.Type = ConnectionType.Close;
-            string path = e.Request.Uri.LocalPath;
+            string path = request.Url.LocalPath;
             byte[] buffer;
 
             if (path == "/field.json")
             {
-                e.Response.ContentType.Value = "application/json";
+                response.ContentType = "application/json";
                 buffer = Encoding.UTF8.GetBytes(BuildFieldJson());
             }
             else if (path == "/types.json")
             {
-                e.Response.ContentType.Value = "application/json";
+               response.ContentType = "application/json";
                 buffer = Encoding.UTF8.GetBytes(BuildTypesJson());
             }
             else if (path == "/jquery.js")
             {
-                e.Response.ContentType.Value = "application/json";
+                response.ContentType = "application/json";
                 buffer = Encoding.UTF8.GetBytes(File.ReadAllText("web/jquery.js"));
             }
             else if (path.StartsWith("/action/"))
             {
-                e.Response.ContentType.Value = "application/json";
+                response.ContentType = "application/json";
                 DoAction(path.Replace("/action/", ""));
                 buffer = Encoding.UTF8.GetBytes(BuildFieldJson());
             }
             else if (path.StartsWith("/image/"))
             {
-                e.Response.ContentType.Value = "image/png";
+                response.ContentType = "image/png";
                 string image = path.Replace("/image/", "");
                 string filePath = "tiles/" + image;
                 if (File.Exists(filePath))
@@ -69,7 +88,10 @@ namespace Mahjong
             else
                 buffer = Encoding.UTF8.GetBytes(File.ReadAllText("web/index.html"));
 
-            e.Response.Body.Write(buffer, 0, buffer.Length);
+            response.ContentLength64 = buffer.Length;
+            Stream output = response.OutputStream;
+            output.Write(buffer, 0, buffer.Length);
+            output.Close();
         }
 
         private void DoAction(string action)
