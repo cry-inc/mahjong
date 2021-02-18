@@ -13,3 +13,7 @@ but there are two other notable things included:
 * Setup Editor for creating your own Tile-Setups
   Start the executable with the argument -editor to activate it.
   You have to replace the file "setup.txt" to play with your custom setup.
+
+Feel free to create PRs to add new tiles or update existing ones :)
+1. Create transparent PNG with correct dimensions
+2. Add filename without extension to tiles.txt
