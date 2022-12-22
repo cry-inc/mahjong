@@ -2,6 +2,7 @@
 angular
 apache
 arch
+arduino
 audacity
 blender
 bootstrap
@@ -9,6 +10,7 @@ chromium
 cmake
 darktable
 debian
+deno
 docker
 drupal
 eclipse
@@ -20,6 +22,7 @@ fsf
 gentoo
 gimp
 git
+gitea
 github
 gnu
 go
@@ -29,6 +32,7 @@ joomla
 jupyter
 kotlin
 kubernetes
+leaflet
 libreoffice
 linux
 llvm
@@ -44,12 +48,15 @@ openjdk
 openttd
 osi
 php
+postgres
 qt
 react
+roundcube
 rust
 scala
 signal
 sqlite
+syncthing
 tensorflow
 tor
 typo3
@@ -61,3 +68,4 @@ vscode
 vue
 wine
 wireshark
+zig
